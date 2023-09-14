@@ -4,10 +4,12 @@ import lombok.*;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "id")
 public class TagDto {
+
+    private String id;
 
     private String name;
 

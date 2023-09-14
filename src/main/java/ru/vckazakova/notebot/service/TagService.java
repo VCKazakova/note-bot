@@ -10,7 +10,7 @@ public interface TagService {
 
     List<TagDto> findAllTags();
 
-    String updateTagByName(String tagName);
+    String updateTagByName(String oldTagName, String newTagName);
 
     String deleteTagByName(String tagName);
 
