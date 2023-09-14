@@ -10,8 +10,7 @@ import ru.vckazakova.notebot.model.Tag;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @DisplayName("TagRepository should:")
@@ -32,10 +31,19 @@ class TagRepositoryTest extends IntegrationBased {
 
     @Test
     @DisplayName("найти все тэги")
-    public void findAllNotesTest() {
+    public void findAllTagsTest() {
         tagRepository.save(tag);
         List<Tag> all = tagRepository.findAll();
         assertFalse(all.isEmpty());
+    }
+
+    @Test
+    @DisplayName("удалить тэг по имени")
+    public void deleteTagByNameTest() {
+        tagRepository.save(tag);
+        tagRepository.deleteTagByName("#здоровье");
+        Optional<Tag> byId = tagRepository.findById("1");
+        assertTrue(byId.isEmpty());
     }
 
 }
