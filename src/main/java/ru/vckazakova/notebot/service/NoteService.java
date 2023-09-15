@@ -1,35 +1,37 @@
 package ru.vckazakova.notebot.service;
 
-import ru.vckazakova.notebot.dto.NoteDto;
+import ru.vckazakova.notebot.dto.NoteDtoRQ;
+import ru.vckazakova.notebot.dto.NoteDtoRS;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NoteService {
 
-    String createNote(NoteDto noteDto);
+    String createNote(NoteDtoRQ noteDtoRQ);
 
-    List<NoteDto> findAllNotes();
+    List<NoteDtoRS> findAllNotes();
 
-    List<NoteDto> findTodayNotes();
+    List<NoteDtoRS> findTodayNotes();
 
-    List<NoteDto> findWeekNotes();
+    List<NoteDtoRS> findCurrentWeekNotes();
 
-    List<NoteDto> findMonthNotes();
+    List<NoteDtoRS> findCurrentMonthNotes();
 
-    List<NoteDto> findYearNotes();
+    List<NoteDtoRS> findYearNotes(int year);
 
-    List<NoteDto> findNotesByPeriod(String fromDate, String toDate);
+    List<NoteDtoRS> findNotesByPeriod(LocalDateTime fromDate, LocalDateTime toDate);
 
-    List<NoteDto> findNotesByTag(String tag);
+    List<NoteDtoRS> findNotesByTag(String tag);
 
-    List<NoteDto> findTodayNotesByTag(String tag);
+    List<NoteDtoRS> findTodayNotesByTag(String tag);
 
-    List<NoteDto> findWeekNotesByTag(String tag);
+    List<NoteDtoRS> findCurrentWeekNotesByTag(String tag);
 
-    List<NoteDto> findMonthNotesByTag(String tag);
+    List<NoteDtoRS> findCurrentMonthNotesByTag(String tag);
 
-    List<NoteDto> findYearNotesByTag(String tag);
+    List<NoteDtoRS> findYearNotesByTag(int year, String tag);
 
-    List<NoteDto> findNotesByPeriodAndByTag(String fromDate, String toDate, String tag);
+    List<NoteDtoRS> findNotesByPeriodAndByTag(LocalDateTime fromDate, LocalDateTime toDate, String tag);
 
 }

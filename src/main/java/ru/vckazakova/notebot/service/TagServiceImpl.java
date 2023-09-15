@@ -9,11 +9,10 @@ import ru.vckazakova.notebot.mapper.TagMapper;
 import ru.vckazakova.notebot.model.Tag;
 import ru.vckazakova.notebot.repository.TagRepository;
 import ru.vckazakova.notebot.repository.TagRepositoryDecorator;
+import ru.vckazakova.notebot.utils.ObjectIdUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.vckazakova.notebot.utils.Utils.createTagId;
 
 @Slf4j
 @Service
@@ -30,7 +29,7 @@ public class TagServiceImpl implements TagService {
         String tagDtoName = tagDto.getName();
         log.info("Создание тэга = {} ", tagDtoName);
         Tag tag = tagMapper.mapTag(tagDto);
-        String tagId = createTagId();
+        String tagId = ObjectIdUtils.createId();
         tag.setName(tagId);
         tagRepository.save(tag);
         return tagDtoName + " тэг успешно создан";
