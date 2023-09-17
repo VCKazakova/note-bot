@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.vckazakova.notebot.dto.TagDto;
 import ru.vckazakova.notebot.mapper.TagMapper;
 import ru.vckazakova.notebot.model.Tag;
-import ru.vckazakova.notebot.repository.TagRepository;
 import ru.vckazakova.notebot.repository.TagRepositoryDecorator;
 
 import java.util.List;
@@ -26,9 +25,6 @@ class TagServiceImplTest {
     private TagRepositoryDecorator tagRepositoryDecorator;
 
     @Mock
-    private TagRepository tagRepository;
-
-    @Mock
     private TagMapper tagMapper;
 
     @InjectMocks
@@ -37,8 +33,10 @@ class TagServiceImplTest {
     @Test
     @DisplayName("создавать тэг")
     public void createTagTest() {
-        TagDto tagDto = new TagDto("1", "#popopo");
-        when(tagMapper.mapTag(tagDto)).thenReturn(new Tag("1", "#popopo"));
+        TagDto tagDto = TagDto.builder()
+                .name("#popopo")
+                .build();
+        when(tagMapper.mapTag(tagDto)).thenReturn(new Tag(null, "#popopo"));
 
         String createTag = tagService.createTag(tagDto);
         assertEquals("#popopo тэг успешно создан", createTag);
@@ -49,13 +47,13 @@ class TagServiceImplTest {
     public void findAllTagsTest() {
         List<Tag> tags = List.of(new Tag("1", "фильмы"), new Tag("2", "музыка"));
 
-        when(tagRepository.findAll()).thenReturn(tags);
-        when(tagMapper.mapTagDto(any())).thenReturn(new TagDto());
+        when(tagRepositoryDecorator.findAll()).thenReturn(tags);
+        when(tagMapper.mapTagDto(any())).thenReturn(TagDto.builder().build());
 
         List<TagDto> allTags = tagService.findAllTags();
 
         verify(tagMapper, times(2)).mapTagDto(any());
-        verify(tagRepository, times(1)).findAll();
+        verify(tagRepositoryDecorator, times(1)).findAll();
         assertEquals(2, allTags.size());
     }
 
@@ -74,9 +72,9 @@ class TagServiceImplTest {
     @DisplayName("удалить тэг по имени")
     public void deleteTagByNameTest() {
         String tagName = "#картины";
-        doNothing().when(tagRepository).deleteTagByName(tagName);
+        doNothing().when(tagRepositoryDecorator).deleteTagByName(tagName);
         String result = tagService.deleteTagByName(tagName);
-        verify(tagRepository, times(1)).deleteTagByName(tagName);
+        verify(tagRepositoryDecorator, times(1)).deleteTagByName(tagName);
         assertEquals(tagName + " тэг успешно удален", result);
     }
 

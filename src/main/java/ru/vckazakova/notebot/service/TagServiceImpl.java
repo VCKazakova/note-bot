@@ -3,11 +3,9 @@ package ru.vckazakova.notebot.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.vckazakova.notebot.dto.TagDto;
 import ru.vckazakova.notebot.mapper.TagMapper;
 import ru.vckazakova.notebot.model.Tag;
-import ru.vckazakova.notebot.repository.TagRepository;
 import ru.vckazakova.notebot.repository.TagRepositoryDecorator;
 import ru.vckazakova.notebot.utils.ObjectIdUtils;
 
@@ -19,24 +17,21 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
-    private final TagRepository tagRepository;
-    private final TagRepositoryDecorator tagRepositoryDecorator;
+    private final TagRepositoryDecorator tagRepository;
     private final TagMapper tagMapper;
 
     @Override
-    @Transactional
     public String createTag(TagDto tagDto) {
         String tagDtoName = tagDto.getName();
         log.info("Создание тэга = {} ", tagDtoName);
         Tag tag = tagMapper.mapTag(tagDto);
         String tagId = ObjectIdUtils.createId();
         tag.setName(tagId);
-        tagRepository.save(tag);
+        tagRepository.saveTag(tag);
         return tagDtoName + " тэг успешно создан";
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<TagDto> findAllTags() {
         log.info("Поиск всех тэгов");
         List<Tag> all = tagRepository.findAll();
@@ -46,15 +41,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    @Transactional
     public String updateTagByName(String oldTagName, String newTagName) {
         log.info("Обновление тэга = {} ", oldTagName);
-        tagRepositoryDecorator.updateTagName(oldTagName, newTagName);
+        tagRepository.updateTagName(oldTagName, newTagName);
         return "Тэг успешно обновлен, новое имя " + newTagName;
     }
 
     @Override
-    @Transactional
     public String deleteTagByName(String tagName) {
         log.info("Удаление тега = {} ", tagName);
         tagRepository.deleteTagByName(tagName);
