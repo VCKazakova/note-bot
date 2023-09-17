@@ -1,16 +1,14 @@
 package ru.vckazakova.notebot.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString(exclude = "id")
+@Value
+@Builder
+@Jacksonized
 public class TagDto {
 
-    private String id;
-
-    private String name;
+    String name;
 
 }
