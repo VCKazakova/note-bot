@@ -6,7 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.vckazakova.notebot.dto.TagDto;
+import ru.vckazakova.notebot.dto.TagDtoRQ;
+import ru.vckazakova.notebot.dto.TagDtoRS;
 import ru.vckazakova.notebot.mapper.TagMapper;
 import ru.vckazakova.notebot.model.Tag;
 import ru.vckazakova.notebot.repository.TagRepositoryDecorator;
@@ -33,12 +34,12 @@ class TagServiceImplTest {
     @Test
     @DisplayName("создавать тэг")
     public void createTagTest() {
-        TagDto tagDto = TagDto.builder()
+        TagDtoRQ tagDtoRQ = TagDtoRQ.builder()
                 .name("#popopo")
                 .build();
-        when(tagMapper.mapTag(tagDto)).thenReturn(new Tag(null, "#popopo"));
+        when(tagMapper.mapTag(tagDtoRQ)).thenReturn(new Tag(null, "#popopo"));
 
-        String createTag = tagService.createTag(tagDto);
+        String createTag = tagService.createTag(tagDtoRQ);
         assertEquals("#popopo тэг успешно создан", createTag);
     }
 
@@ -48,9 +49,9 @@ class TagServiceImplTest {
         List<Tag> tags = List.of(new Tag("1", "фильмы"), new Tag("2", "музыка"));
 
         when(tagRepositoryDecorator.findAll()).thenReturn(tags);
-        when(tagMapper.mapTagDto(any())).thenReturn(TagDto.builder().build());
+        when(tagMapper.mapTagDto(any())).thenReturn(TagDtoRS.builder().build());
 
-        List<TagDto> allTags = tagService.findAllTags();
+        List<TagDtoRS> allTags = tagService.findAllTags();
 
         verify(tagMapper, times(2)).mapTagDto(any());
         verify(tagRepositoryDecorator, times(1)).findAll();

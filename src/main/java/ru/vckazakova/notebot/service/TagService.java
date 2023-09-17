@@ -1,14 +1,15 @@
 package ru.vckazakova.notebot.service;
 
-import ru.vckazakova.notebot.dto.TagDto;
+import ru.vckazakova.notebot.dto.TagDtoRQ;
+import ru.vckazakova.notebot.dto.TagDtoRS;
 
 import java.util.List;
 
 public interface TagService {
 
-    String createTag(TagDto tagDto);
+    String createTag(TagDtoRQ tagDtoRQ);
 
-    List<TagDto> findAllTags();
+    List<TagDtoRS> findAllTags();
 
     String updateTagByName(String oldTagName, String newTagName);
 

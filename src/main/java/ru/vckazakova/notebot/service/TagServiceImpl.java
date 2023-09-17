@@ -3,7 +3,8 @@ package ru.vckazakova.notebot.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.vckazakova.notebot.dto.TagDto;
+import ru.vckazakova.notebot.dto.TagDtoRQ;
+import ru.vckazakova.notebot.dto.TagDtoRS;
 import ru.vckazakova.notebot.mapper.TagMapper;
 import ru.vckazakova.notebot.model.Tag;
 import ru.vckazakova.notebot.repository.TagRepositoryDecorator;
@@ -21,10 +22,10 @@ public class TagServiceImpl implements TagService {
     private final TagMapper tagMapper;
 
     @Override
-    public String createTag(TagDto tagDto) {
-        String tagDtoName = tagDto.getName();
+    public String createTag(TagDtoRQ tagDtoRQ) {
+        String tagDtoName = tagDtoRQ.getName();
         log.info("Создание тэга = {} ", tagDtoName);
-        Tag tag = tagMapper.mapTag(tagDto);
+        Tag tag = tagMapper.mapTag(tagDtoRQ);
         String tagId = ObjectIdUtils.createId();
         tag.setName(tagId);
         tagRepository.saveTag(tag);
@@ -32,7 +33,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDto> findAllTags() {
+    public List<TagDtoRS> findAllTags() {
         log.info("Поиск всех тэгов");
         List<Tag> all = tagRepository.findAll();
         return all.stream()

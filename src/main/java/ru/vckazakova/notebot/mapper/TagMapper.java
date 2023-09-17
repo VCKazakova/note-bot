@@ -2,15 +2,16 @@ package ru.vckazakova.notebot.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.vckazakova.notebot.dto.TagDto;
+import ru.vckazakova.notebot.dto.TagDtoRQ;
+import ru.vckazakova.notebot.dto.TagDtoRS;
 import ru.vckazakova.notebot.model.Tag;
 
 @Mapper(componentModel = "spring")
 public interface TagMapper {
 
     @Mapping(target = "id", ignore = true)
-    Tag mapTag(TagDto tagDto);
+    Tag mapTag(TagDtoRQ tagDtoRQ);
 
-    TagDto mapTagDto(Tag tag);
+    TagDtoRS mapTagDto(Tag tag);
 
 }
