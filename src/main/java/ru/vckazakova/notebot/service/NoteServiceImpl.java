@@ -24,11 +24,13 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public String createNote(NoteDtoRQ noteDtoRQ) {
+        LocalDateTime createDateTime = LocalDateTime.now();
         String text = noteDtoRQ.getText();
         log.info("Создание заметки = {} ", text);
         Note note = noteMapper.mapNote(noteDtoRQ);
         String tagId = ObjectIdUtils.createId();
         note.setId(tagId);
+        note.setDateTime(createDateTime);
         noteRepository.saveNote(note);
         return text + " заметка создана успешно";
     }
