@@ -27,7 +27,7 @@ public class TagServiceImpl implements TagService {
         log.info("Создание тэга = {} ", tagDtoName);
         Tag tag = tagMapper.mapTag(tagDtoRQ);
         String tagId = ObjectIdUtils.createId();
-        tag.setName(tagId);
+        tag.setId(tagId);
         tagRepository.saveTag(tag);
         return tagDtoName + " тэг успешно создан";
     }

@@ -28,7 +28,7 @@ public class NoteServiceImpl implements NoteService {
         log.info("Создание заметки = {} ", text);
         Note note = noteMapper.mapNote(noteDtoRQ);
         String tagId = ObjectIdUtils.createId();
-        note.setTag(tagId);
+        note.setId(tagId);
         noteRepository.saveNote(note);
         return text + " заметка создана успешно";
     }
