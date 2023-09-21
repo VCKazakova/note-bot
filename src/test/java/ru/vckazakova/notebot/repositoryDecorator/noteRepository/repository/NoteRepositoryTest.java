@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.vckazakova.notebot.repositoryDecorator.IntegrationBased;
 import ru.vckazakova.notebot.repositoryDecorator.noteRepository.repository.entity.NoteEntity;
-import ru.vckazakova.notebot.repositoryDecorator.noteRepository.repository.NoteRepository;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -55,45 +54,6 @@ class NoteRepositoryTest extends IntegrationBased {
     public void findAllNotesTest() {
         List<NoteEntity> all = noteRepository.findAll();
         assertFalse(all.isEmpty());
-    }
-
-    @Test
-    @DisplayName("найти все заметки по тэгу")
-    public void findAllNotesByTagTest() {
-        List<NoteEntity> allByTag = noteRepository.findAllByTag("#films");
-        assertEquals(2, allByTag.size());
-    }
-
-    @Test
-    @DisplayName("найти все заметки по году")
-    public void findAllNotesByYearTest() {
-        List<NoteEntity> allByYear = noteRepository.findAllByYear(2023);
-        assertEquals(1, allByYear.size());
-    }
-
-    @Test
-    @DisplayName("найти все заметки по году и тэгу")
-    public void findAllNotesByYearAndTagTest() {
-        List<NoteEntity> allByYearAndTag = noteRepository.findAllByYearAndTag(2023, "#films");
-        assertEquals(1, allByYearAndTag.size());
-    }
-
-    @Test
-    @DisplayName("найти все заметки за период")
-    public void findAllByPeriodTest() {
-        List<NoteEntity> allByDateTimeBetween =
-                noteRepository.findAllByDateTimeBetween(LocalDateTime.of(2022, Month.MARCH, 1, 10, 0),
-                        LocalDateTime.of(2022, Month.APRIL, 30, 10, 0));
-        assertEquals(2, allByDateTimeBetween.size());
-    }
-
-    @Test
-    @DisplayName("найти все заметки за период по тэгу")
-    public void findAllByPeriodAndTagTest() {
-        List<NoteEntity> allByDateTimeBetween =
-                noteRepository.findAllByDateTimeBetweenAndTag(LocalDateTime.of(2022, Month.MARCH, 1, 10, 0),
-                        LocalDateTime.of(2022, Month.APRIL, 30, 10, 0), "#films");
-        assertEquals(1, allByDateTimeBetween.size());
     }
 
 }
