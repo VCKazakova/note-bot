@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.vckazakova.notebot.repositoryDecorator.IntegrationBased;
-import ru.vckazakova.notebot.repositoryDecorator.noteRepository.repository.entity.NoteEntity;
 import ru.vckazakova.notebot.repositoryDecorator.noteRepository.repository.NoteRepository;
+import ru.vckazakova.notebot.repositoryDecorator.noteRepository.repository.entity.NoteEntity;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,92 +57,85 @@ class NoteRepositoryDecoratorImplTest extends IntegrationBased {
     }
 
     @Test
-    @DisplayName("искать заметки за текущий день")
-    public void findNotesForCurrentDayTest() {
-        List<NoteEntity> notesForCurrentDay = noteRepositoryDecorator.findNotesForCurrentDay();
-        assertEquals(1, notesForCurrentDay.size());
+    public void test() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("tag", "#films");
+        List<NoteEntity> allByParametersCriteria = noteRepositoryDecorator.findAllByParameters(params);
+        assertEquals(1, allByParametersCriteria.size());
     }
 
     @Test
-    @DisplayName("искать заметки за текущий день по тэгу")
-    public void findNotesForCurrentDayByTagTest() {
-        List<NoteEntity> notesForCurrentDayByTag = noteRepositoryDecorator.findNotesForCurrentDayByTag("#здоровье");
-        assertEquals(1, notesForCurrentDayByTag.size());
-    }
-
-
-    @Test
-    @DisplayName("искать заметки за текущую неделю")
-    public void findNotesForCurrentWeekTest() {
-        List<NoteEntity> notesForCurrentWeek = noteRepositoryDecorator.findNotesForCurrentWeek();
-        assertEquals(1, notesForCurrentWeek.size());
+    public void test2() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("tag", "#films");
+        params.put("fromDate", startDate);
+        params.put("toDate", endDate);
+        List<NoteEntity> allByParametersCriteria = noteRepositoryDecorator.findAllByParameters(params);
+        assertEquals(1, allByParametersCriteria.size());
     }
 
     @Test
-    @DisplayName("искать заметки за текущую неделю по тэгу")
-    public void findNotesForCurrentWeekByTagTest() {
-        List<NoteEntity> notesForCurrentWeek = noteRepositoryDecorator.findNotesForCurrentWeekByTag("#art");
-        assertEquals(0, notesForCurrentWeek.size());
+    public void test22() {
+        Map<String, Object> params = new HashMap<>();
+        List<NoteEntity> allByParametersCriteria = noteRepositoryDecorator.findAllByParameters(params);
+        assertEquals(2, allByParametersCriteria.size());
     }
 
     @Test
-    @DisplayName("искать заметки за текущий месяц")
-    public void findNotesForCurrentMonthTest() {
-        List<NoteEntity> notesForCurrentMonth = noteRepositoryDecorator.findNotesForCurrentMonth();
-        assertEquals(1, notesForCurrentMonth.size());
+    public void test3() {
+        // только тэг
+        Map<String, Object> params = new HashMap<>();
+        params.put("tag", "#films");
+        List<NoteEntity> allByParameters = noteRepositoryDecorator.findAllByParameters(params);
+        assertEquals(1, allByParameters.size());
     }
 
     @Test
-    @DisplayName("искать заметки за текущий месяц по тэгу")
-    public void findNotesForCurrentMonthByTagTest() {
-        List<NoteEntity> notesForCurrentMonth = noteRepositoryDecorator.findNotesForCurrentMonthByTag("#здоровье");
-        assertEquals(1, notesForCurrentMonth.size());
+    public void test4() {
+        // без параметров
+        Map<String, Object> params = new HashMap<>();
+        List<NoteEntity> allByParameters = noteRepositoryDecorator.findAllByParameters(params);
+        assertEquals(2, allByParameters.size());
     }
 
     @Test
-    @DisplayName("найти все заметки")
-    public void findAllNotesTest() {
-        List<NoteEntity> allNoteEntities = noteRepositoryDecorator.findAllNotes();
-        assertEquals(2, allNoteEntities.size());
+    public void test5() {
+        // 2 даты
+        Map<String, Object> params = new HashMap<>();
+        params.put("dateFrom", startDate);
+        params.put("dateTo", endDate);
+        List<NoteEntity> allByParameters = noteRepositoryDecorator.findAllByParameters(params);
+        assertEquals(2, allByParameters.size());
     }
 
     @Test
-    @DisplayName("найти все заметки за период")
-    public void findAllNotesByPeriodTest() {
-        List<NoteEntity> allNotesByPeriod =
-                noteRepositoryDecorator.findAllNotesByPeriod(startDate,
-                        endDate);
-        assertEquals(1, allNotesByPeriod.size());
+    public void test6() {
+        // 2 даты + тэг
+        Map<String, Object> params = new HashMap<>();
+        params.put("dateFrom", startDate);
+        params.put("dateTo", endDate);
+        params.put("tag", "#films");
+        List<NoteEntity> allByParameters = noteRepositoryDecorator.findAllByParameters(params);
+        assertEquals(1, allByParameters.size());
     }
 
     @Test
-    @DisplayName("найти все заметки за период по тэгу")
-    public void findAllNotesByPeriodAndTagTest() {
-        List<NoteEntity> allNotesByPeriodAndTag =
-                noteRepositoryDecorator.findAllNotesByPeriodAndTag(startDate, endDate, "#здоровье");
-        assertTrue(allNotesByPeriodAndTag.isEmpty());
+    public void test7() {
+        // 1 дата + тэг
+        Map<String, Object> params = new HashMap<>();
+        params.put("dateTo", endDate);
+        params.put("tag", "#films");
+        List<NoteEntity> allByParameters = noteRepositoryDecorator.findAllByParameters(params);
+        assertEquals(1, allByParameters.size());
     }
 
     @Test
-    @DisplayName("найти все заметки по тэгу")
-    public void findAllNotesByTagTest() {
-        List<NoteEntity> notesByTag = noteRepositoryDecorator.findAllNotesByTag("#films");
-        assertEquals(1, notesByTag.size());
-    }
-
-    @Test
-    @DisplayName("найти все заметки по году")
-    public void findAllNotesByYearTest() {
-        List<NoteEntity> allNotesByYear = noteRepositoryDecorator.findAllNotesByYear(2023);
-        assertFalse(allNotesByYear.isEmpty());
-    }
-
-    @Test
-    @DisplayName("найти все заметки по году и тэгу")
-    public void findAllNotesByYearAndTagTest() {
-        List<NoteEntity> notesByYearAndTag = noteRepositoryDecorator.findAllNotesByYearAndTag(2023, "#films");
-        List<NoteEntity> all = noteRepository.findAll();
-        assertEquals(1, notesByYearAndTag.size());
+    public void test8() {
+        // 1 дата
+        Map<String, Object> params = new HashMap<>();
+        params.put("dateTo", endDate);
+        List<NoteEntity> allByParameters = noteRepositoryDecorator.findAllByParameters(params);
+        assertEquals(2, allByParameters.size());
     }
 
 }
