@@ -1,17 +1,18 @@
 package ru.vckazakova.notebot.note.service;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.vckazakova.notebot.note.dto.NoteDtoRQ;
 import ru.vckazakova.notebot.note.dto.NoteDtoRS;
-import ru.vckazakova.notebot.repositoryDecorator.noteRepository.repository.entity.NoteEntity;
-import ru.vckazakova.notebot.repositoryDecorator.noteRepository.NoteRepositoryDecorator;
+import ru.vckazakova.notebot.repositoryDecorator.note.NoteRepositoryDecorator;
+import ru.vckazakova.notebot.repositoryDecorator.note.repository.entity.NoteEntity;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,6 +59,16 @@ class NoteServiceImplTest {
         verify(noteRepositoryDecorator, times(1)).saveNote(any());
         verify(noteMapper, times(1)).mapNote(noteDtoRQ);
     }
+
+//    @Test
+//    public void test() {
+//        when(noteRepositoryDecorator.findAllByParameters(any(), anyInt(), anyInt())).thenReturn(List.of());
+//
+//
+//        List<NoteDtoRS> allNotesByParameters = noteService.findAllNotesByParameters(PeriodRQ.MONTH, null, 0, 3);
+//
+//        int size = allNotesByParameters.size();
+//    }
 
 //    @Test
 //    @DisplayName("находить все заметки")
