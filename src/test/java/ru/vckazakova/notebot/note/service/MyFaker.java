@@ -2,7 +2,7 @@ package ru.vckazakova.notebot.note.service;
 
 import com.github.javafaker.Faker;
 import ru.vckazakova.notebot.note.dto.NoteDtoRS;
-import ru.vckazakova.notebot.repositoryDecorator.noteRepository.repository.entity.NoteEntity;
+import ru.vckazakova.notebot.repositoryDecorator.note.repository.entity.NoteEntity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
