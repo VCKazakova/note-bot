@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.vckazakova.notebot.tag.TagController;
 import ru.vckazakova.notebot.tag.dto.TagDtoRQ;
 import ru.vckazakova.notebot.tag.service.TagService;
 
@@ -20,8 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("TagController should:")
-@WebMvcTest(controllers = TagController.class)
-class TagControllerTest {
+@WebMvcTest(controllers = TagControllerImpl.class)
+class TagControllerImplTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -35,7 +34,7 @@ class TagControllerTest {
     @Test
     @DisplayName("не создавать тэг, если не передано его имя")
     public void notCreateTagTest() throws Exception {
-        mockMvc.perform(post("/tag")
+        mockMvc.perform(post("/v1/tags")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(TagDtoRQ.builder().build())))
                 .andExpect(status().isBadRequest());
@@ -44,7 +43,7 @@ class TagControllerTest {
     @Test
     @DisplayName("создавать тэг, если имя передано корректно")
     public void createTagTest() throws Exception {
-        mockMvc.perform(post("/tag")
+        mockMvc.perform(post("/v1/tags")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(TagDtoRQ.builder()
                                 .name("#test")
@@ -55,7 +54,7 @@ class TagControllerTest {
     @Test
     @DisplayName("получить все тэги")
     public void getAllTagsTest() throws Exception {
-        mockMvc.perform(get("/tag"))
+        mockMvc.perform(get("/v1/tags"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
@@ -69,9 +68,9 @@ class TagControllerTest {
 
         when(tagService.updateTagByName(oldTagName, newTagName)).thenReturn(expectedResponse);
 
-        mockMvc.perform(patch("/tag/{oldTagName}", oldTagName)
+        mockMvc.perform(patch("/v1/tags/{tagName}", oldTagName)
                         .param("newTagName", newTagName))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().string(expectedResponse));
     }
 
@@ -81,7 +80,7 @@ class TagControllerTest {
         String oldTagName = "oldTagName";
         String newTagName = "";
 
-        assertThrows(ServletException.class, () -> mockMvc.perform(patch("/tag/{oldTagName}", oldTagName)
+        assertThrows(ServletException.class, () -> mockMvc.perform(patch("/v1/tags/{tagName}", oldTagName)
                 .param("newTagName", newTagName)));
     }
 
@@ -93,7 +92,7 @@ class TagControllerTest {
 
         when(tagService.deleteTagByName(tagName)).thenReturn(expectedResponse);
 
-        mockMvc.perform(delete("/tag/{tagName}", tagName))
+        mockMvc.perform(delete("/v1/tags/{tagName}", tagName))
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedResponse));
     }

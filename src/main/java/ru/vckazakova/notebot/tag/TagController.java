@@ -2,49 +2,38 @@ package ru.vckazakova.notebot.tag;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.vckazakova.notebot.tag.dto.TagDtoRQ;
 import ru.vckazakova.notebot.tag.dto.TagDtoRS;
-import ru.vckazakova.notebot.tag.service.TagService;
 
 import java.util.List;
 
 @Validated
-@RestController
-@RequiredArgsConstructor
-public class TagController {
+@RequestMapping("/v1/tags")
+public interface TagController {
 
-    private final TagService tagService;
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    String createTag(@RequestBody @Valid TagDtoRQ tagDtoRQ);
 
-    @PostMapping("/tag")
-    public ResponseEntity<String> createTag(@RequestBody @Valid TagDtoRQ tagDtoRQ) {
-        String tag = tagService.createTag(tagDtoRQ);
-        return ResponseEntity.status(201)
-                .body(tag);
-    }
+    @GetMapping
+    List<TagDtoRS> findAllTags(@RequestParam(required = false, defaultValue = "0") int page,
+                               @RequestParam(required = false, defaultValue = "5") int size);
 
-    @GetMapping("/tag")
-    public ResponseEntity<List<TagDtoRS>> findAllTags() {
-        List<TagDtoRS> allTags = tagService.findAllTags();
-        return ResponseEntity.ok(allTags);
-    }
+    @PatchMapping("/{tagName}")
+    String updateTagByName(@PathVariable String tagName,
+                           @RequestParam @NotBlank String newTagName);
 
-    @PatchMapping("/tag/{oldTagName}")
-    public ResponseEntity<String> updateTagByName(
-            @PathVariable String oldTagName,
-            @RequestParam @NotBlank String newTagName) {
-        String updateTagByName = tagService.updateTagByName(oldTagName, newTagName);
-        return ResponseEntity.status(201)
-                .body(updateTagByName);
-    }
-
-    @DeleteMapping("/tag/{tagName}")
-    public ResponseEntity<String> deleteTagByName(@PathVariable String tagName) {
-        String deleteTagByName = tagService.deleteTagByName(tagName);
-        return ResponseEntity.ok(deleteTagByName);
-    }
-
+    @DeleteMapping("/{tagName}")
+    String deleteTagByName(@PathVariable String tagName);
 }
