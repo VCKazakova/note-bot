@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.vckazakova.notebot.tag.dto.TagDtoRQ;
 import ru.vckazakova.notebot.tag.dto.TagDtoRS;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository.TagEntity;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.TagRepositoryDecorator;
+import ru.vckazakova.notebot.repositoryDecorator.tag.repository.TagEntity;
+import ru.vckazakova.notebot.repositoryDecorator.tag.TagRepositoryDecorator;
 import ru.vckazakova.notebot.utils.ObjectIdUtils;
 
 import java.util.List;
@@ -25,16 +25,14 @@ public class TagServiceImpl implements TagService {
         String tagDtoName = tagDtoRQ.getName();
         log.info("Создание тэга = {} ", tagDtoName);
         TagEntity tagEntity = tagMapper.mapTag(tagDtoRQ);
-        String tagId = ObjectIdUtils.createId();
-        tagEntity.setId(tagId);
-        tagRepository.saveTag(tagEntity);
-        return tagDtoName + " тэг успешно создан";
+        TagEntity saveTag = tagRepository.saveTag(tagEntity);
+        return saveTag + " тэг успешно создан";
     }
 
     @Override
-    public List<TagDtoRS> findAllTags() {
+    public List<TagDtoRS> findAllTags(int page, int size) {
         log.info("Поиск всех тэгов");
-        List<TagEntity> all = tagRepository.findAll();
+        List<TagEntity> all = tagRepository.findAll(page, size);
         return all.stream()
                 .map(tagMapper::mapTagDto)
                 .collect(Collectors.toList());

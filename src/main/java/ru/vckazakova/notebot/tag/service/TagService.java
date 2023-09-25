@@ -9,7 +9,7 @@ public interface TagService {
 
     String createTag(TagDtoRQ tagDtoRQ);
 
-    List<TagDtoRS> findAllTags();
+    List<TagDtoRS> findAllTags(int page, int size);
 
     String updateTagByName(String oldTagName, String newTagName);
 

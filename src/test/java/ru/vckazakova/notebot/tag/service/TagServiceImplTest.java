@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.vckazakova.notebot.tag.dto.TagDtoRQ;
 import ru.vckazakova.notebot.tag.dto.TagDtoRS;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository.TagEntity;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.TagRepositoryDecorator;
+import ru.vckazakova.notebot.repositoryDecorator.tag.repository.TagEntity;
+import ru.vckazakova.notebot.repositoryDecorator.tag.TagRepositoryDecorator;
 
 import java.util.List;
 
@@ -36,10 +36,17 @@ class TagServiceImplTest {
         TagDtoRQ tagDtoRQ = TagDtoRQ.builder()
                 .name("#popopo")
                 .build();
-        when(tagMapper.mapTag(tagDtoRQ)).thenReturn(new TagEntity(null, "#popopo"));
+
+        TagEntity tagEntity = new TagEntity("1", "#popopo");
+
+        when(tagRepositoryDecorator.saveTag(tagEntity)).thenReturn(tagEntity);
+        when(tagMapper.mapTag(tagDtoRQ)).thenReturn(tagEntity);
 
         String createTag = tagService.createTag(tagDtoRQ);
-        assertEquals("#popopo тэг успешно создан", createTag);
+        assertEquals(tagEntity + " тэг успешно создан", createTag);
+
+        verify(tagRepositoryDecorator, times(1)).saveTag(tagEntity);
+        verify(tagMapper, times(1)).mapTag(tagDtoRQ);
     }
 
     @Test
@@ -47,13 +54,13 @@ class TagServiceImplTest {
     public void findAllTagsTest() {
         List<TagEntity> tagEntities = List.of(new TagEntity("1", "фильмы"), new TagEntity("2", "музыка"));
 
-        when(tagRepositoryDecorator.findAll()).thenReturn(tagEntities);
+        when(tagRepositoryDecorator.findAll(0, 3)).thenReturn(tagEntities);
         when(tagMapper.mapTagDto(any())).thenReturn(TagDtoRS.builder().build());
 
-        List<TagDtoRS> allTags = tagService.findAllTags();
+        List<TagDtoRS> allTags = tagService.findAllTags(0, 3);
 
         verify(tagMapper, times(2)).mapTagDto(any());
-        verify(tagRepositoryDecorator, times(1)).findAll();
+        verify(tagRepositoryDecorator, times(1)).findAll(0,3);
         assertEquals(2, allTags.size());
     }
 
