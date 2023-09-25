@@ -1,14 +1,17 @@
-package ru.vckazakova.notebot.repositoryDecorator.tagRepository;
+package ru.vckazakova.notebot.repositoryDecorator.tag;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository.TagRepository;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository.TagEntity;
+import ru.vckazakova.notebot.repositoryDecorator.tag.repository.TagEntity;
+import ru.vckazakova.notebot.repositoryDecorator.tag.repository.TagRepository;
 
 import java.util.List;
 
@@ -21,8 +24,8 @@ public class TagRepositoryDecoratorImpl implements TagRepositoryDecorator {
 
     @Override
     @Transactional
-    public void saveTag(TagEntity tagEntity) {
-        tagRepository.save(tagEntity);
+    public TagEntity saveTag(TagEntity tagEntity) {
+        return tagRepository.save(tagEntity);
     }
 
     @Override
@@ -35,8 +38,10 @@ public class TagRepositoryDecoratorImpl implements TagRepositoryDecorator {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TagEntity> findAll() {
-        return tagRepository.findAll();
+    public List<TagEntity> findAll(int page, int size) {
+        Pageable paging = PageRequest.of(page, size);
+        Page<TagEntity> all = tagRepository.findAll(paging);
+        return all.getContent();
     }
 
     @Override

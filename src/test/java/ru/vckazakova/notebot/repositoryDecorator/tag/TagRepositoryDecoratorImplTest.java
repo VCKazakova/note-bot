@@ -1,11 +1,13 @@
-package ru.vckazakova.notebot.repositoryDecorator.tagRepository;
+package ru.vckazakova.notebot.repositoryDecorator.tag;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vckazakova.notebot.repositoryDecorator.IntegrationBased;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository.TagRepository;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository.TagEntity;
+import ru.vckazakova.notebot.repositoryDecorator.tag.repository.TagEntity;
+import ru.vckazakova.notebot.repositoryDecorator.tag.repository.TagRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional(transactionManager = "transactionManager")
 @DisplayName("TagRepositoryDecoratorImpl should:")
 class TagRepositoryDecoratorImplTest extends IntegrationBased {
 
@@ -21,19 +24,6 @@ class TagRepositoryDecoratorImplTest extends IntegrationBased {
 
     @Autowired
     private TagRepositoryDecorator tagRepositoryDecorator;
-
-    @BeforeEach
-    public void init() {
-        TagEntity tagEntity = new TagEntity("1", "#здоровье");
-        tagRepository.save(tagEntity);
-        TagEntity tagEntity2 = new TagEntity("2", "#фильмы");
-        tagRepository.save(tagEntity2);
-    }
-
-    @AfterEach
-    public void flush() {
-        tagRepository.deleteAll();
-    }
 
     @Test
     @DisplayName("сохранить тэг")
@@ -48,6 +38,8 @@ class TagRepositoryDecoratorImplTest extends IntegrationBased {
     @Test
     @DisplayName("обновить тег по имени")
     public void updateTagByNameTest() {
+        TagEntity tagEntity = new TagEntity("1", "#здоровье");
+        tagRepository.save(tagEntity);
         tagRepositoryDecorator.updateTagName("#здоровье", "#здоровьеиспорт");
         Optional<TagEntity> byId = tagRepository.findById("1");
         assertTrue(byId.isPresent());
@@ -57,14 +49,32 @@ class TagRepositoryDecoratorImplTest extends IntegrationBased {
     @Test
     @DisplayName("найти все тэги")
     public void findAllTest() {
-        List<TagEntity> all = tagRepositoryDecorator.findAll();
+        TagEntity tagEntity = new TagEntity("1", "#здоровье");
+        tagRepository.save(tagEntity);
+        TagEntity tagEntity2 = new TagEntity("2", "#фильмы");
+        tagRepository.save(tagEntity2);
+        List<TagEntity> all = tagRepositoryDecorator.findAll(0, 3);
         assertFalse(all.isEmpty());
         assertEquals(2, all.size());
     }
 
     @Test
+    @DisplayName("найти все тэги на 2-ой странице")
+    public void findAllOnSecondPageTest() {
+        TagEntity tagEntity = new TagEntity("1", "#здоровье");
+        tagRepository.save(tagEntity);
+        TagEntity tagEntity2 = new TagEntity("2", "#фильмы");
+        tagRepository.save(tagEntity2);
+        List<TagEntity> all = tagRepositoryDecorator.findAll(1, 3);
+        assertTrue(all.isEmpty());
+        assertEquals(0, all.size());
+    }
+
+    @Test
     @DisplayName("удалить тэг по имени")
     public void deleteTagByNameTest() {
+        TagEntity tagEntity = new TagEntity("1", "#здоровье");
+        tagRepository.save(tagEntity);
         tagRepositoryDecorator.deleteTagByName("#здоровье");
         Optional<TagEntity> byId = tagRepository.findById("1");
         assertTrue(byId.isEmpty());

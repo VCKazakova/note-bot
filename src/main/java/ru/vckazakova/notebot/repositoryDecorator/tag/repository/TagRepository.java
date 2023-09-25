@@ -1,4 +1,4 @@
-package ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository;
+package ru.vckazakova.notebot.repositoryDecorator.tag.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

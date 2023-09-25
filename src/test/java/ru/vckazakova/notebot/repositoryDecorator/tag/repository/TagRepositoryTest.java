@@ -1,12 +1,10 @@
-package ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository;
+package ru.vckazakova.notebot.repositoryDecorator.tag.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.vckazakova.notebot.repositoryDecorator.IntegrationBased;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository.TagRepository;
-import ru.vckazakova.notebot.repositoryDecorator.tagRepository.repository.TagEntity;
 
 import java.util.List;
 import java.util.Optional;
