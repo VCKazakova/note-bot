@@ -26,6 +26,10 @@ public class NoteServiceImpl implements NoteService {
     private final NoteMapper noteMapper;
     private final DateTimeStrategyHolder dateTimeStrategyHolder;
 
+    public static final String FROM_DATE = "fromDate";
+    public static final String TO_DATE = "toDate";
+    public static final String TAG = "tag";
+
     @Override
     public String createNote(NoteDtoRQ noteDtoRQ) {
         String text = noteDtoRQ.getText();
@@ -45,9 +49,9 @@ public class NoteServiceImpl implements NoteService {
 
     private Map<String, Object> createParamsMap(LocalDateTime fromDate, LocalDateTime toDate, String tag) {
         HashMap<String, Object> parameters = new HashMap<>();
-        Optional.ofNullable(fromDate).ifPresent(localDateTime -> parameters.put("fromDate", fromDate));
-        Optional.ofNullable(toDate).ifPresent(localDateTime -> parameters.put("toDate", toDate));
-        Optional.ofNullable(tag).ifPresent(stringTag -> parameters.put("tag", tag));
+        Optional.ofNullable(fromDate).ifPresent(localDateTime -> parameters.put(FROM_DATE, fromDate));
+        Optional.ofNullable(toDate).ifPresent(localDateTime -> parameters.put(TO_DATE, toDate));
+        Optional.ofNullable(tag).ifPresent(stringTag -> parameters.put(TAG, tag));
         return parameters;
     }
 
