@@ -1,16 +1,20 @@
 package ru.vckazakova.notebot.note;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.vckazakova.notebot.note.dto.NoteDtoRQ;
 import ru.vckazakova.notebot.note.service.NoteService;
+import ru.vckazakova.notebot.utils.validation.DateTimeValidatorImpl;
 
+import static org.junit.Assert.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -18,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("NoteController should:")
 @WebMvcTest(controllers = NoteControllerImpl.class)
+@Import(DateTimeValidatorImpl.class)
 class NoteControllerImplTest {
 
     @Autowired
@@ -72,6 +77,25 @@ class NoteControllerImplTest {
     public void getAllNotesByTagTest() throws Exception {
         mockMvc.perform(get("/v1/notes")
                         .param("tag", "#tag"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    @DisplayName("выбросить ошибку, если неверно передан период")
+    public void getAllNotesByPeriodThrowAnExTest() {
+        assertThrows(ServletException.class, () -> mockMvc.perform(get("/v1/notes")
+                .param("fromDate", "2023-02-01T00:00:00")
+                .param("toDate", "2023-01-01T00:00:00")));
+
+    }
+
+    @Test
+    @DisplayName("получить все заметки по периоду")
+    public void getAllNotesByOkPeriodTest() throws Exception {
+        mockMvc.perform(get("/v1/notes")
+                        .param("fromDate", "2023-01-01T00:00:00")
+                        .param("toDate", "2023-02-01T00:00:00"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }

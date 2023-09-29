@@ -6,6 +6,7 @@ import ru.vckazakova.notebot.note.dto.NoteDtoRQ;
 import ru.vckazakova.notebot.note.dto.NoteDtoRS;
 import ru.vckazakova.notebot.note.dto.PeriodRQ;
 import ru.vckazakova.notebot.note.service.NoteService;
+import ru.vckazakova.notebot.utils.validation.DateTimeValidator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public class NoteControllerImpl implements NoteController {
 
     private final NoteService noteService;
+    private final DateTimeValidator dateTimeValidator;
 
     public String createNote(NoteDtoRQ noteDtoRQ) {
         return noteService.createNote(noteDtoRQ);
@@ -26,6 +28,7 @@ public class NoteControllerImpl implements NoteController {
                                                     String tag,
                                                     int page,
                                                     int size) {
+        dateTimeValidator.validatePeriod(fromDate, toDate);
         return noteService.findAllNotesByParameters(fromDate, toDate, tag, page, size);
     }
 
