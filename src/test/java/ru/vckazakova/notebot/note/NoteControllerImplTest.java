@@ -52,6 +52,18 @@ class NoteControllerImplTest {
                 .andExpect(status().isBadRequest());
     }
 
+
+    @Test
+    @DisplayName("ошибка валидации, если тэг не начинается со знака #")
+    public void getAllNotesByTagThrowsExceptionTest() throws Exception {
+        mockMvc.perform(post("/v1/notes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(NoteDtoRQ.builder()
+                                .tag("test")
+                                .build())))
+                .andExpect(status().isBadRequest());
+    }
+
     @Test
     @DisplayName("создать заметку, если переданы корректные данные")
     public void createNoteTest() throws Exception {

@@ -51,6 +51,18 @@ class TagControllerImplTest {
                 .andExpect(status().isCreated());
     }
 
+
+    @Test
+    @DisplayName("не создавать тэг, если имя не начинается с #")
+    public void createTagValidationTest() throws Exception {
+        mockMvc.perform(post("/v1/tags")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(TagDtoRQ.builder()
+                                .name("test")
+                                .build())))
+                .andExpect(status().isBadRequest());
+    }
+
     @Test
     @DisplayName("получить все тэги")
     public void getAllTagsTest() throws Exception {
