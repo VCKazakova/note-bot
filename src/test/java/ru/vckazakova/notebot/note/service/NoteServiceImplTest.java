@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.vckazakova.notebot.common.TagHelper;
 import ru.vckazakova.notebot.note.dto.NoteDtoRQ;
 import ru.vckazakova.notebot.note.dto.NoteDtoRS;
 import ru.vckazakova.notebot.note.dto.PeriodRQ;
@@ -37,6 +38,8 @@ class NoteServiceImplTest {
     private DateTimeStrategyHolder dateTimeStrategyHolder;
     @InjectMocks
     private NoteServiceImpl noteService;
+    @Mock
+    private TagHelper tagHelper;
 
     private static MyFaker myFaker;
     private static List<NoteDtoRS> randomListNoteDtoRS;

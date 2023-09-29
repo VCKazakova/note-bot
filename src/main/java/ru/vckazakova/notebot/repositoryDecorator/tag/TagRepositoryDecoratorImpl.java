@@ -14,6 +14,7 @@ import ru.vckazakova.notebot.repositoryDecorator.tag.repository.TagEntity;
 import ru.vckazakova.notebot.repositoryDecorator.tag.repository.TagRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -48,5 +49,11 @@ public class TagRepositoryDecoratorImpl implements TagRepositoryDecorator {
     @Transactional
     public void deleteTagByName(String tagName) {
         tagRepository.deleteTagByName(tagName);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<TagEntity> findTagByName(String tagName) {
+        return tagRepository.findTagEntityByName(tagName);
     }
 }

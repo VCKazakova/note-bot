@@ -10,6 +10,7 @@ import ru.vckazakova.notebot.repositoryDecorator.tag.TagRepositoryDecorator;
 import ru.vckazakova.notebot.utils.ObjectIdUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,5 +51,12 @@ public class TagServiceImpl implements TagService {
         log.info("Удаление тега = {} ", tagName);
         tagRepository.deleteTagByName(tagName);
         return tagName + " тэг успешно удален";
+    }
+
+    @Override
+    public Optional<TagDtoRS> findTagByName(String tagName) {
+        log.info("Поиск тэга={}", tagName);
+        Optional<TagEntity> tagByName = tagRepository.findTagByName(tagName);
+        return tagByName.map(tagMapper::mapTagDto);
     }
 }

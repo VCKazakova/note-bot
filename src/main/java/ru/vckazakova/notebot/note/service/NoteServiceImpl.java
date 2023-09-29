@@ -3,6 +3,7 @@ package ru.vckazakova.notebot.note.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.vckazakova.notebot.common.TagHelper;
 import ru.vckazakova.notebot.note.dto.NoteDtoRQ;
 import ru.vckazakova.notebot.note.dto.NoteDtoRS;
 import ru.vckazakova.notebot.note.dto.PeriodRQ;
@@ -25,6 +26,7 @@ public class NoteServiceImpl implements NoteService {
     private final NoteRepositoryDecorator noteRepository;
     private final NoteMapper noteMapper;
     private final DateTimeStrategyHolder dateTimeStrategyHolder;
+    private final TagHelper tagHelper;
 
     public static final String FROM_DATE = "fromDate";
     public static final String TO_DATE = "toDate";
@@ -36,6 +38,7 @@ public class NoteServiceImpl implements NoteService {
         log.info("Создание заметки = {} ", text);
         NoteEntity noteEntity = noteMapper.mapNote(noteDtoRQ);
         NoteEntity saveNote = noteRepository.saveNote(noteEntity);
+        tagHelper.saveTag(noteDtoRQ.getTag());
         return saveNote + " заметка создана успешно";
     }
 

@@ -4,6 +4,7 @@ import ru.vckazakova.notebot.tag.dto.TagDtoRQ;
 import ru.vckazakova.notebot.tag.dto.TagDtoRS;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TagService {
 
@@ -15,4 +16,5 @@ public interface TagService {
 
     String deleteTagByName(String tagName);
 
+    Optional<TagDtoRS> findTagByName(String tagName);
 }
