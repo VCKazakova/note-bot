@@ -39,6 +39,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
+jar {
+    manifest {
+        attributes "Main-Class": "ru.vckazakova.notebot.NoteBotApplication"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
